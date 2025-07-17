@@ -2,6 +2,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, StatusBar } from 
 import React from 'react'
 import { LinearGradient } from 'react-native-linear-gradient'
 import Logo from '../components/Logo'
+import RewardedAdComponent from '../components/AddsInfo'
 
 const { height } = Dimensions.get('window')
 
@@ -76,6 +77,9 @@ const Home = ({ navigation }) => {
                     </Text>
                 </View>
             </View>
+
+            {/* <RewardedAdComponent /> */}
+
         </View>
     )
 }

@@ -19,6 +19,7 @@ import ViewShot from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
 import { LinearGradient } from 'react-native-linear-gradient';
 import Share from 'react-native-share';
+import { QRTemplates } from '../components/QRTemplates';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,6 +34,7 @@ const QRGenerator = () => {
     const [qrStyle, setQrStyle] = useState('square');
     const [frameStyle, setFrameStyle] = useState('none');
     const viewShotRef = useRef();
+    const [selectedTemplate, setSelectedTemplate] = useState(0); // 0 = first template
 
     const requestStoragePermission = async () => {
         if (Platform.OS === 'android') {
@@ -364,7 +366,7 @@ const QRGenerator = () => {
 
                     {qrValue && (
                         <>
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 style={styles.customizeButton}
                                 onPress={() => setShowCustomization(true)}
                                 activeOpacity={0.8}
@@ -375,7 +377,7 @@ const QRGenerator = () => {
                                 >
                                     <Text style={styles.buttonText}>Customize QR Code</Text>
                                 </LinearGradient>
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
                             <TouchableOpacity
                                 style={styles.downloadButton}
@@ -393,6 +395,19 @@ const QRGenerator = () => {
                     )}
                 </View>
 
+                <View style={{ padding: 20 }}>
+                    {qrValue && (<>
+                        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 10 }}>
+                            {QRTemplates.map((Template, idx) => (
+                                <TouchableOpacity key={idx} onPress={() => setSelectedTemplate(idx)} style={{ marginHorizontal: 8 }}>
+                                    <Template value={qrValue || 'preview'} size={80} />
+                                    {selectedTemplate === idx && <Text style={{ textAlign: 'center', color: '#667eea' }}>Selected</Text>}
+                                </TouchableOpacity>
+                            ))}
+                        </ScrollView>
+                    </>)}
+                </View>
+
                 {/* QR Code Display */}
                 {qrValue ? (
                     <View style={styles.qrSection}>
@@ -406,12 +421,9 @@ const QRGenerator = () => {
                             )}
                             <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 1 }}>
                                 <View style={styles.qrWrapper}>
-                                    <QRCode
-                                        value={qrValue}
-                                        size={qrSize}
-                                        color={qrColor}
-                                        backgroundColor={qrBackgroundColor}
-                                    />
+                                    {React.createElement(QRTemplates[selectedTemplate], {
+                                        value: qrValue,
+                                    })}
                                 </View>
                             </ViewShot>
                         </View>
@@ -452,6 +464,17 @@ const QRGenerator = () => {
                             {renderSizePicker()}
                             {renderStylePicker()}
                             {renderFramePicker()}
+                            <View style={styles.customizationSection}>
+                                <Text style={styles.sectionTitle}>Select Template</Text>
+                                <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 10 }}>
+                                    {QRTemplates.map((Template, idx) => (
+                                        <TouchableOpacity key={idx} onPress={() => setSelectedTemplate(idx)} style={{ marginHorizontal: 8 }}>
+                                            <Template value={qrValue || 'preview'} size={80} />
+                                            {selectedTemplate === idx && <Text style={{ textAlign: 'center', color: '#667eea' }}>Selected</Text>}
+                                        </TouchableOpacity>
+                                    ))}
+                                </ScrollView>
+                            </View>
                         </ScrollView>
 
                         <View style={styles.modalFooter}>
