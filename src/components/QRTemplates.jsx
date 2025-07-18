@@ -1,15 +1,26 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ImageBackground } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
 import { LinearGradient } from 'react-native-linear-gradient';
+import Svg, { Circle, Rect } from 'react-native-svg';
+
 
 // Example QR template components
-const QRTemplate1 = ({ value, size }) => (
-    <View style={[styles.template, styles.circle, { backgroundColor: '#1ccfc9' }]}>
-        <QRCode value={value} size={size} backgroundColor="#fff" color="#222" />
-        <Text style={styles.label}>SCAN ME</Text>
-    </View>
-);
+const QRTemplate1 = ({ value, size }) => {
+    return (
+        <ImageBackground
+            source={require('../assets/qr-templates/qr1.jpg')} // Replace with your image path
+            style={[styles.template, { width: size + 40, height: size + 60 }]} // size + padding
+            imageStyle={{ borderRadius: 16 }}
+        >
+            <View style={styles.overlay}>
+                <QRCode value={value} size={size} backgroundColor="transparent" color="#222" />
+                <Text style={styles.label}>SCAN ME</Text>
+            </View>
+        </ImageBackground>
+    );
+};
+
 
 const QRTemplate2 = ({ value, size }) => (
     <View style={[styles.template, styles.square, { borderColor: '#ffb300', borderWidth: 4 }]}>
@@ -164,6 +175,39 @@ const QRTemplate7 = ({ value, size = 150 }) => (
     </View>
 );
 
+
+const QRTemplate8 = ({ value, size = 150 }) => {
+    const circleRadius = size * 1.7;
+    const shadowLength = size * 1.2;
+
+    return (
+        <View style={styles.container}>
+            <Svg height={circleRadius} width={circleRadius}>
+                {/* Teal Circle */}
+                <Circle cx={circleRadius / 2} cy={circleRadius / 2} r={circleRadius / 2} fill="#00c3c3" />
+
+                {/* Shadow (black triangle) */}
+                <Rect
+                    x={circleRadius / 1.9}
+                    y={circleRadius / 1.5}
+                    width={shadowLength}
+                    height={shadowLength}
+                    fill="black"
+                    transform={`rotate(-55, ${circleRadius / 2}, ${circleRadius / 1})`}
+                    style={{ zIndex: 100 }}
+                />
+            </Svg>
+
+            {/* QR Code and Label */}
+            <View style={styles.qrContainer}>
+                <Text style={styles.label}>SCAN ME</Text>
+                <QRCode value={value} size={size} color="#000" backgroundColor="white" />
+            </View>
+        </View>
+    );
+};
+
+
 export const QRTemplates = [
     QRTemplate1,
     QRTemplate2,
@@ -172,6 +216,7 @@ export const QRTemplates = [
     QRTemplate5,
     QRTemplate6,
     QRTemplate7,
+    QRTemplate8
     // ...add more here
 ];
 
@@ -235,5 +280,24 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontWeight: 'bold',
         fontSize: 14,
+    },
+    container: {
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    qrContainer: {
+        position: 'absolute',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    label: {
+        position: 'absolute',
+        top: -25,
+        fontWeight: 'bold',
+        color: '#000',
+        fontSize: 14,
+        backgroundColor: 'white',
+        paddingHorizontal: 8,
+        borderRadius: 4,
     },
 }); 

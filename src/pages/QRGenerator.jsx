@@ -19,7 +19,7 @@ import ViewShot from 'react-native-view-shot';
 import RNFS from 'react-native-fs';
 import { LinearGradient } from 'react-native-linear-gradient';
 import Share from 'react-native-share';
-import { QRTemplates } from '../components/QRTemplates';
+import { QRTemplates } from '../components/QRImg';
 
 const { width, height } = Dimensions.get('window');
 
@@ -223,6 +223,30 @@ const QRGenerator = () => {
         }
     };
 
+    const getTemplateName = (index) => {
+        const templateNames = [
+            'Classic',
+            'Golden',
+            'Elegant',
+            'Vibrant',
+            'Minimal',
+            'Gradient',
+            'Modern',
+            'Artistic',
+            'Premium',
+            'Dynamic',
+            'Sleek',
+            'Bold',
+            'Sophisticated',
+            'Creative',
+            'Professional',
+            'Trendy',
+            'Exclusive',
+            'Innovative'
+        ];
+        return templateNames[index] || `Template ${index + 1}`;
+    };
+
     const renderColorPicker = () => (
         <View style={styles.customizationSection}>
             <Text style={styles.sectionTitle}>QR Code Color</Text>
@@ -400,8 +424,15 @@ const QRGenerator = () => {
                         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 10 }}>
                             {QRTemplates.map((Template, idx) => (
                                 <TouchableOpacity key={idx} onPress={() => setSelectedTemplate(idx)} style={{ marginHorizontal: 8 }}>
-                                    <Template value={qrValue || 'preview'} size={80} />
-                                    {selectedTemplate === idx && <Text style={{ textAlign: 'center', color: '#667eea' }}>Selected</Text>}
+                                    <View style={[
+                                        styles.templateOption,
+                                        selectedTemplate === idx && styles.templateOptionSelected
+                                    ]}>
+                                        <Text style={[
+                                            styles.templateName,
+                                            selectedTemplate === idx && styles.templateNameSelected
+                                        ]}>{getTemplateName(idx)}</Text>
+                                    </View>
                                 </TouchableOpacity>
                             ))}
                         </ScrollView>
@@ -420,11 +451,10 @@ const QRGenerator = () => {
                                 />
                             )}
                             <ViewShot ref={viewShotRef} options={{ format: 'png', quality: 1 }}>
-                                <View style={styles.qrWrapper}>
-                                    {React.createElement(QRTemplates[selectedTemplate], {
-                                        value: qrValue,
-                                    })}
-                                </View>
+                                {React.createElement(QRTemplates[selectedTemplate], {
+                                    value: qrValue,
+                                    size: qrSize,
+                                })}
                             </ViewShot>
                         </View>
                         <Text style={styles.qrInfo}>Scan this QR code with any QR scanner app</Text>
@@ -469,8 +499,15 @@ const QRGenerator = () => {
                                 <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{ marginVertical: 10 }}>
                                     {QRTemplates.map((Template, idx) => (
                                         <TouchableOpacity key={idx} onPress={() => setSelectedTemplate(idx)} style={{ marginHorizontal: 8 }}>
-                                            <Template value={qrValue || 'preview'} size={80} />
-                                            {selectedTemplate === idx && <Text style={{ textAlign: 'center', color: '#667eea' }}>Selected</Text>}
+                                            <View style={[
+                                                styles.templateOption,
+                                                selectedTemplate === idx && styles.templateOptionSelected
+                                            ]}>
+                                                <Text style={[
+                                                    styles.templateName,
+                                                    selectedTemplate === idx && styles.templateNameSelected
+                                                ]}>{getTemplateName(idx)}</Text>
+                                            </View>
                                         </TouchableOpacity>
                                     ))}
                                 </ScrollView>
@@ -621,7 +658,7 @@ const styles = StyleSheet.create({
     qrContainer: {
         backgroundColor: '#ffffff',
         borderRadius: 20,
-        padding: 20,
+        padding: 10,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -632,6 +669,8 @@ const styles = StyleSheet.create({
         elevation: 8,
         marginBottom: 15,
         position: 'relative',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
     qrWrapper: {
         padding: 10,
@@ -835,6 +874,40 @@ const styles = StyleSheet.create({
         bottom: -10,
         borderRadius: 30,
         zIndex: -1,
+    },
+    templateOption: {
+        backgroundColor: '#ffffff',
+        borderRadius: 12,
+        padding: 15,
+        alignItems: 'center',
+        justifyContent: 'center',
+        minWidth: 100,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        borderWidth: 2,
+        borderColor: '#e2e8f0',
+    },
+    templateOptionSelected: {
+        backgroundColor: '#667eea',
+        borderColor: '#667eea',
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+        elevation: 5,
+    },
+    templateName: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        color: '#2d3748',
+        textAlign: 'center',
+    },
+    templateNameSelected: {
+        color: '#ffffff',
     },
 });
 
