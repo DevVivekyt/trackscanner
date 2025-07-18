@@ -78,7 +78,7 @@ const Home = ({ navigation }) => {
                 </View>
             </View>
 
-            {/* <RewardedAdComponent /> */}
+            <RewardedAdComponent />
 
         </View>
     )

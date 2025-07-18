@@ -20,12 +20,8 @@ export default function RewardedAdComponent() {
         // Show ad immediately on mount
         showAd();
 
-        // Set up interval to show ad every 60 seconds
-        const intervalId = setInterval(showAd, 60000);
-
         return () => {
             unsubscribeLoaded();
-            clearInterval(intervalId);
         };
     }, []);
 

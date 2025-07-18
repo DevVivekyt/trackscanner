@@ -23,7 +23,7 @@ import { QRTemplates } from '../components/QRImg';
 
 const { width, height } = Dimensions.get('window');
 
-const QRGenerator = () => {
+const QRGenerator = ({ navigation }) => {
     const [inputText, setInputText] = useState('');
     const [qrValue, setQrValue] = useState('');
     const [hasPermission, setHasPermission] = useState(null);
@@ -353,8 +353,16 @@ const QRGenerator = () => {
                     colors={['#667eea', '#764ba2']}
                     style={styles.header}
                 >
-                    <Text style={styles.headerTitle}>QR Code Generator</Text>
-                    <Text style={styles.headerSubtitle}>Create custom QR codes instantly</Text>
+                    <View style={styles.headerRow}>
+                        <TouchableOpacity onPress={() => navigation && navigation.goBack()} style={styles.backButton}>
+                            <Text style={styles.backIcon}>{'\u2190'}</Text>
+                        </TouchableOpacity>
+                        <View style={styles.headerTextContainer}>
+                            <Text style={styles.headerTitle}>QR Code Generator</Text>
+                            <Text style={styles.headerSubtitle}>Create custom QR codes instantly</Text>
+                        </View>
+                        <View style={{ width: 40 }} />
+                    </View>
                 </LinearGradient>
 
                 {/* Input Section */}
@@ -559,11 +567,32 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 8,
     },
+    headerRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        width: '100%',
+    },
+    backButton: {
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    backIcon: {
+        fontSize: 40,
+        color: '#fff',
+        fontWeight: 'bold',
+    },
+    headerTextContainer: {
+        flex: 1,
+        alignItems: 'center',
+    },
     headerTitle: {
         fontSize: 28,
         fontWeight: 'bold',
         color: '#ffffff',
-        marginBottom: 8,
+        marginBottom: 4,
         textShadowColor: 'rgba(0, 0, 0, 0.3)',
         textShadowOffset: { width: 0, height: 2 },
         textShadowRadius: 4,
